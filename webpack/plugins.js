@@ -1,65 +1,57 @@
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import CommonsChunkPlugin from 'webpack/lib/optimize/CommonsChunkPlugin';
 import DedupePlugin from 'webpack/lib/optimize/DedupePlugin';
-import UglifyJsPlugin from 'webpack/lib/optimize/UglifyJsPlugin';
 import OccurrenceOrderPlugin from 'webpack/lib/optimize/OccurrenceOrderPlugin';
 import DefinePlugin from 'webpack/lib/DefinePlugin';
-import NoErrorsPlugin from 'webpack/lib/NoErrorsPlugin';
 import ProvidePlugin from 'webpack/lib/ProvidePlugin';
+import NoErrorsPlugin from 'webpack/lib/NoErrorsPlugin';
 
-import ngAnnotatePlugin from 'ng-annotate-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-import ENV from '../env';
+import ngAnnotatePlugin from 'ng-annotate-webpack-plugin';
 
-import {
-  extractAppCSS
-} from './sass-loader';
+import UglifyJsPlugin from 'webpack/lib/optimize/UglifyJsPlugin';
 
-import {
-  extractComponentsCSS
-} from './css-loader';
+import { extractAppCSS } from './sass-loader';
+import { extractComponentsCSS } from './css-loader';
 
-const plugins = {
-  plugins: [
-    new NoErrorsPlugin,
-    new HtmlWebpackPlugin({
-      template: './src/index.ejs',
-      inject: 'body',
-      favicon: './static/favicon.ico',
-      minify: {
-        collapseWhitespace: true
-      }
-    }),
-    new LodashModuleReplacementPlugin,
-    new DefinePlugin({
-      'process.env': JSON.stringify({
-        NODE_ENV: ENV
-      })
-    }),
-    extractAppCSS,
-    extractComponentsCSS,
-    new DedupePlugin,
-    new CommonsChunkPlugin("commons.chunk.[hash].js"),
-    new OccurrenceOrderPlugin,
-    // new UglifyJsPlugin({
-    //   beautify: false,
-    //   comments: false,
-    //   compress: {
-    //     warnings: false,
-    //     drop_console: true
-    //   },
-    //   mangle: {
-    //     except: ['$'],
-    //     screw_ie8: true,
-    //     keep_fnames: true
-    //   }
-    // }),
-    new ngAnnotatePlugin({
-      add: true
-    })
-  ]
+import { ENV } from './env';
+
+let plugins = [
+  new ngAnnotatePlugin({
+    add: true
+  }),
+  new NoErrorsPlugin,
+  new HtmlWebpackPlugin({
+    template: './src/index.ejs',
+    inject: 'body',
+    favicon: './static/favicon.ico',
+    minify: {
+      collapseWhitespace: true
+    }
+  }),
+  new LodashModuleReplacementPlugin,
+  new DefinePlugin({
+    '__DEVELOPMENT__': (ENV === 'development'),
+    'ENV': JSON.stringify(ENV)
+  }),
+  extractAppCSS,
+  extractComponentsCSS,
+  new DedupePlugin,
+  new CommonsChunkPlugin("commons.chunk.[hash].js"),
+  new OccurrenceOrderPlugin,
+  new ProvidePlugin({}),
+];
+
+if (ENV === 'production') {
+  plugins.push(new UglifyJsPlugin({
+    compress: {
+      warnings: false
+    }
+  }));
+}
+
+export default {
+  plugins
 };
-
-export default plugins;

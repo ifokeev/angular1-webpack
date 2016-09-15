@@ -9,8 +9,7 @@ const loaders = {
   module: {
     loaders: [{
       test: /\.css$/,
-      exclude: /node_modules/,
-      loader: extractComponentsCSS.extract('postcss!css')
+      loader: extractComponentsCSS.extract('postcss!css?sourceMap')
     }]
   }
 };
@@ -18,4 +17,5 @@ const loaders = {
 export {
   extractComponentsCSS
 };
+
 export default loaders;

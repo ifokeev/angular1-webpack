@@ -10,7 +10,7 @@ const loaders = {
     loaders: [{
       test: /\.scss$/,
       exclude: /node_modules/,
-      loader: extractAppCSS.extract('css!postcss!sass')
+      loader: extractAppCSS.extract('css?sourceMap!postcss!sass?sourceMap')
     }]
   }
 };

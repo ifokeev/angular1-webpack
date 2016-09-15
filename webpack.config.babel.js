@@ -19,7 +19,7 @@ import devServer from './webpack/dev-server';
 import alias from './webpack/utils/alias';
 import chunk from './webpack/utils/chunk';
 
-import ENV from './env';
+import { ENV } from './webpack/env';
 
 let config = {
   root: path.resolve(__dirname),

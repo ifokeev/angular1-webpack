@@ -1,7 +1,3 @@
-import path from 'path';
-
-console.log(__dirname);
-
 const loaders = {
   resolve: {
     extensions: ['.jade', '.pug'],
